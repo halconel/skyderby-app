@@ -22,10 +22,19 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
     // Activity overrides
     // -----------------------------------------------------------------------
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        // Get authorization credentials
+        val login = PreferenceSave.getInstance(this).login
+        val password = PreferenceSave.getInstance(this).password
+
+        // The credentials is empty
+        if(login == "") {
+            val startLoginActivity = Intent(this, LoginActivity::class.java)
+            startActivity(startLoginActivity)
+        }
 
         // Find the custom TurbolinksView object in your layout
         turbolinksView = findViewById<TurbolinksView>(R.id.turbolinks_view)
@@ -100,6 +109,9 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
                     .restoreWithCachedSnapshot(false)
                     .view(turbolinksView)
                     .visit(BASE_URL + "/error")
+        }
+        else if(code == 401) {
+
         }
     }
 }
