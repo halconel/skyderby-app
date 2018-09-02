@@ -27,5 +27,7 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="by_skyderby_team">by Skyderby Team</string>
+    <string name="made_with">©2014-2018 Made with</string>
 
 </resources>

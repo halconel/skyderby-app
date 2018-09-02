@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity
 import com.basecamp.turbolinks.TurbolinksSession
 import com.basecamp.turbolinks.TurbolinksAdapter
 import com.basecamp.turbolinks.TurbolinksView
-import com.basecamp.turbolinks.*
 
 class MainActivity : AppCompatActivity(), TurbolinksAdapter {
     // Change the BASE_URL to an address that your VM or device can hit.
