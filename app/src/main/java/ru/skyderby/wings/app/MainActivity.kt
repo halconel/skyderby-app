@@ -4,11 +4,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 
-import kotlinx.android.synthetic.main.activity_main.*
-
 import com.basecamp.turbolinks.TurbolinksSession
 import com.basecamp.turbolinks.TurbolinksAdapter
 import com.basecamp.turbolinks.TurbolinksView
+import com.basecamp.turbolinks.*
 
 class MainActivity : AppCompatActivity(), TurbolinksAdapter {
     // Change the BASE_URL to an address that your VM or device can hit.
@@ -17,6 +16,7 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
 
     private var location: String? = null
     private var turbolinksView: TurbolinksView? = null
+    //private val turbolinksHelper: TurbolinksHelper? = null
 
     // -----------------------------------------------------------------------
     // Activity overrides
@@ -26,14 +26,14 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        // Get authorization credentials
-        val login = PreferenceSave.getInstance(this).login
-        val password = PreferenceSave.getInstance(this).password
+        val mEmail = intent.getStringExtra(USER_NAME)
+        val mPassword = intent.getStringExtra(PASSWORD)
+        val mToken = intent.getStringExtra(TOKEN)
+        if (mToken == null) {
+            // The credentials is empty
 
-        // The credentials is empty
-        if(login == "") {
-            val startLoginActivity = Intent(this, LoginActivity::class.java)
-            startActivity(startLoginActivity)
+        } else {
+
         }
 
         // Find the custom TurbolinksView object in your layout
