@@ -15,23 +15,24 @@
 
     <ImageView
         android:id="@+id/imageHeart"
-        android:layout_width="25dp"
+        android:layout_width="35dp"
         android:layout_height="25dp"
+        android:layout_alignEnd="@+id/made_with_love_text"
         android:layout_alignTop="@+id/made_with_love_text"
-        android:layout_toEndOf="@+id/made_with_love_text"
         android:adjustViewBounds="false"
-        android:cropToPadding="false"
-        app:srcCompat="@drawable/ic_action_withlove" />
+        android:src="@drawable/heart"
+        android:tint="#f3f2ff" />
 
     <TextView
         android:id="@+id/made_with_love_text"
-        android:layout_width="wrap_content"
+        android:layout_width="221dp"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="100dp"
         android:gravity="center_horizontal"
         android:text="@string/made_with"
+        android:textAlignment="viewStart"
         android:textSize="18sp" />
 
     <TextView
