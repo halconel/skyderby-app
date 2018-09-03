@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,22 +9,38 @@
     <ImageView
         android:id="@+id/imgLogo"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="361dp"
         android:layout_centerInParent="true"
         android:src="@drawable/logo" />
 
+    <ImageView
+        android:id="@+id/imageHeart"
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:layout_alignTop="@+id/made_with_love_text"
+        android:layout_toEndOf="@+id/made_with_love_text"
+        android:adjustViewBounds="false"
+        android:cropToPadding="false"
+        app:srcCompat="@drawable/ic_action_withlove" />
+
     <TextView
-        android:layout_width="fill_parent"
+        android:id="@+id/made_with_love_text"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="100dp"
         android:gravity="center_horizontal"
         android:text="@string/made_with"
-        android:textSize="25sp" />
+        android:textSize="18sp" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="73dp"
+        android:gravity="center_horizontal"
         android:text="@string/by_skyderby_team" />
 
 </RelativeLayout>
