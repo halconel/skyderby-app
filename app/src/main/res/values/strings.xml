@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Sky Derby</string>
+    <string name="app_name">Skyderby</string>
     <string name="action_settings">Settings</string>
     <string name="saved_pin_code_default">1234</string>
     <string name="saved_pin">PIN</string>
