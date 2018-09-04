@@ -256,7 +256,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         override fun doInBackground(vararg params: Void): Boolean? {
             // Credentials
             val authHeader = ("$mEmail:$mPassword").toByteArray()
-            token = "Basic " + Base64.getEncoder().encodeToString(authHeader)
+            token = "Basic " + android.util.Base64.encodeToString(authHeader, android.util.Base64.NO_WRAP)
             // Request user data to the sky derby API
             try {
                 val response = skyDerbyApiService.getProfile(token!!).execute()

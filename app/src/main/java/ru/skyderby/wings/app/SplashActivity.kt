@@ -80,7 +80,7 @@ class SplashActivity : Activity() {
 
     private fun getAuthToken(username:String, password:String): String {
         val authHeader = ("$username:$password").toByteArray()
-        return "Basic " + Base64.getEncoder().encodeToString(authHeader)
+        return "Basic " + android.util.Base64.encodeToString(authHeader, android.util.Base64.NO_WRAP)
     }
 
     companion object {
