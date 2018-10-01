@@ -7,6 +7,9 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
+import okhttp3.OkHttpClient
+import ru.skyderby.wings.app.WebkitCookieManagerProxy
+
 
 interface SkyDerbyApiService {
 
@@ -14,12 +17,20 @@ interface SkyDerbyApiService {
     fun getProfile(@Header("Authorization") authorization: String): Call<CredentialsMessage>
 
     companion object {
+
+        val proxy by lazy {
+            WebkitCookieManagerProxy(null, java.net.CookiePolicy.ACCEPT_ALL)
+        }
+
         fun create(): SkyDerbyApiService {
+
+            val client = OkHttpClient.Builder().cookieJar(proxy).build()
 
             val retrofit = Retrofit.Builder()
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .baseUrl("https://skyderby.ru/api/")
+                    .client(client)
                     .build()
 
             return retrofit.create(SkyDerbyApiService::class.java)

@@ -13,8 +13,8 @@ import com.basecamp.turbolinks.TurbolinksView
 class MainActivity : AppCompatActivity(), TurbolinksAdapter {
     // Change the BASE_URL to an address that your VM or device can hit.
     private  val HOST = "skyderby.ru"
-    private val BASE_URL = "https://" + HOST + "/?mobile=1"
-    private val INTENT_URL = "https://" + HOST + "/?mobile=1"
+    private var BASE_URL = "https://$HOST/?mobile=1"
+    private var INTENT_URL = "https://$HOST/?mobile=1"
 
     private var location: String? = null
     private var turbolinksView: TurbolinksView? = null
@@ -28,23 +28,16 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val mEmail = intent.getStringExtra(USER_NAME)
-        val mPassword = intent.getStringExtra(PASSWORD)
-        val mToken = intent.getStringExtra(TOKEN)
-        if (mToken == null || mEmail == null || mPassword == null) {
+        val mEmail = intent.getStringExtra(getString(R.string.USER_NAME))
+        val mPassword = intent.getStringExtra(getString(R.string.PASSWORD))
+        val mToken = intent.getStringExtra(getString(R.string.TOKEN))
+        val userID = intent.getLongExtra(getString(R.string.USER_ID), 0)
+        if (mToken == null || mEmail == null || mPassword == null || userID == 0L) {
             // The credentials is empty
         } else {
-            WebViewDatabase.getInstance(this).clearHttpAuthUsernamePassword()
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                WebViewDatabase
-                        .getInstance(this)
-                        .setHttpAuthUsernamePassword(HOST, HOST, mEmail, mPassword)
-            } else {
-                TurbolinksSession.getDefault(this)
-                        .webView
-                        .setHttpAuthUsernamePassword(HOST, HOST, mEmail, mPassword)
-            }
-       }
+            BASE_URL = "https://$HOST/profiles/$userID/edit?mobile=1"
+            INTENT_URL = "https://$HOST/profiles/$userID/edit?mobile=1"
+        }
 
         TurbolinksSession.getDefault(this)
                 .webView

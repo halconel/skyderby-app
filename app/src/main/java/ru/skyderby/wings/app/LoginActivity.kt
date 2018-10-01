@@ -34,10 +34,6 @@ import java.util.*
  */
 class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
-    val skyDerbyApiServe by lazy {
-        SkyDerbyApiService.create()
-    }
-
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -224,11 +220,12 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         email.setAdapter(adapter)
     }
 
-    private fun startMainActivity(username: String?, password: String?, token: String?) {
+    private fun startMainActivity(username: String?, password: String?, token: String?, userID: Long) {
         val intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
-            putExtra(USER_NAME, username)
-            putExtra(PASSWORD, password)
-            putExtra(TOKEN, token)
+            putExtra(getString(R.string.USER_NAME), username)
+            putExtra(getString(R.string.PASSWORD), password)
+            putExtra(getString(R.string.TOKEN), token)
+            putExtra(getString(R.string.USER_ID), userID)
         }
         startActivity(intent)
     }
@@ -249,17 +246,25 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    inner class UserLoginTask internal constructor(private val mEmail: String, private val mPassword: String) : AsyncTask<Void, Void, Boolean>() {
+    inner class UserLoginTask internal constructor(
+            private val mEmail: String,
+            private val mPassword: String
+    ) : AsyncTask<Void, Void, Boolean>() {
 
         private var token: String? = null
+        var userID: Long? = null
 
         override fun doInBackground(vararg params: Void): Boolean? {
             // Credentials
             val authHeader = ("$mEmail:$mPassword").toByteArray()
-            token = "Basic " + android.util.Base64.encodeToString(authHeader, android.util.Base64.NO_WRAP)
+            token = "Basic " + android
+                    .util
+                    .Base64
+                    .encodeToString(authHeader, android.util.Base64.NO_WRAP)
             // Request user data to the sky derby API
             try {
                 val response = skyDerbyApiService.getProfile(token!!).execute()
+                if (response.isSuccessful) userID = response.body()!!.id
                 return response.isSuccessful
             } catch (e: IOException) {
                 e.printStackTrace()
@@ -273,7 +278,7 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             showProgress(false)
 
             if (success!!) {
-                startMainActivity(mEmail, mPassword, token!!)
+                startMainActivity(mEmail, mPassword, token!!, userID!!)
                 finish()
             } else {
                 password.error = getString(R.string.error_incorrect_password)

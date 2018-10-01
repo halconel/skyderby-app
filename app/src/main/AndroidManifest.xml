@@ -47,9 +47,6 @@
             android:name=".LoginActivity"
             android:theme="@style/WithGradientBackground"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".LoginActivity2"
-            android:label="@string/title_activity_login2"></activity>
     </application>
 
 </manifest>

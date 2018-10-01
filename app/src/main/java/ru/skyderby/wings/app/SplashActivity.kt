@@ -6,12 +6,6 @@ import android.os.Bundle
 import android.os.Handler
 import ru.skyderby.wings.app.api.SkyDerbyApiService
 import java.io.IOException
-import java.util.Base64
-
-const val USER_NAME = "ru.skyderby.wings.app.username"
-const val PASSWORD = "ru.skyderby.wings.app.password"
-const val RESPONSE_CODE = "ru.skyderby.wings.app.response_code"
-const val TOKEN = "ru.skyderby.wings.app.token"
 
 class SplashActivity : Activity() {
     // Sky Derby API interface
@@ -21,6 +15,9 @@ class SplashActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
+
+        //Start cookie magic
+        java.net.CookieHandler.setDefault(SkyDerbyApiService.proxy)
 
         Handler().postDelayed({
             // Get authorization credentials
@@ -57,9 +54,9 @@ class SplashActivity : Activity() {
 
     private fun startMainActivity(username: String?, password: String?, token: String?) {
         val intent = Intent(this, MainActivity::class.java).apply {
-            putExtra(USER_NAME, username)
-            putExtra(PASSWORD, password)
-            putExtra(TOKEN, token)
+            putExtra(getString(R.string.USER_NAME), username)
+            putExtra(getString(R.string.PASSWORD), password)
+            putExtra(getString(R.string.TOKEN), token)
         }
         startActivity(intent)
     }
@@ -71,9 +68,9 @@ class SplashActivity : Activity() {
 
     private fun startLoginActivity(username:String, password:String, code:Int) {
         val intent = Intent(this, LoginActivity::class.java).apply {
-            putExtra(USER_NAME, username)
-            putExtra(PASSWORD, password)
-            putExtra(RESPONSE_CODE, code)
+            putExtra(getString(R.string.USER_NAME), username)
+            putExtra(getString(R.string.PASSWORD), password)
+            putExtra(getString(R.string.RESPONSE_CODE), code)
         }
         startActivity(intent)
     }
@@ -86,6 +83,6 @@ class SplashActivity : Activity() {
     companion object {
 
         // Splash screen timer
-        private val SPLASH_TIME_OUT = 3000
+        private const val SPLASH_TIME_OUT = 3000
     }
 }

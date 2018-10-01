@@ -29,5 +29,12 @@
     </string>
     <string name="by_skyderby_team">by Skyderby Team</string>
     <string name="made_with">©2014-2018 Made with</string>
+    <!-- Strings related to put\get extra -->
+    <string name="USER_NAME">ru.skyderby.wings.app.username</string>
+    <string name="PASSWORD">ru.skyderby.wings.app.password</string>
+    <string name="RESPONSE_CODE">ru.skyderby.wings.app.response_code</string>
+    <string name="TOKEN">ru.skyderby.wings.app.token</string>
+    <string name="USER_ID">ru.skyderby.wings.app.userID</string>
+
 
 </resources>
