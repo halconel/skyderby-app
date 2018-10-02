@@ -8,6 +8,10 @@ import ru.skyderby.wings.app.R
 import ru.skyderby.wings.app.api.SkyDerbyApiService
 import ru.skyderby.wings.app.helpers.PreferenceSave
 import java.io.IOException
+import android.support.v4.app.ActivityOptionsCompat
+import android.view.View
+import kotlinx.android.synthetic.main.activity_splash.*
+
 
 class SplashActivity : Activity() {
     // Sky Derby API interface
@@ -66,7 +70,9 @@ class SplashActivity : Activity() {
 
     private fun startLoginActivity() {
         val intent = Intent(this, LoginActivity::class.java)
-        startActivity(intent)
+        val options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(this, imgLogo as View, "logo")
+        startActivity(intent, options.toBundle())
     }
 
     private fun startLoginActivity(username:String, password:String, code:Int) {
@@ -75,7 +81,9 @@ class SplashActivity : Activity() {
             putExtra(getString(R.string.PASSWORD), password)
             putExtra(getString(R.string.RESPONSE_CODE), code)
         }
-        startActivity(intent)
+        val options = ActivityOptionsCompat
+                .makeSceneTransitionAnimation(this, imgLogo as View, "logo")
+        startActivity(intent, options.toBundle())
     }
 
     private fun getAuthToken(username:String, password:String): String {

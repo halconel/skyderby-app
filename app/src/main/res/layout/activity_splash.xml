@@ -8,6 +8,7 @@
 
     <ImageView
         android:id="@+id/imgLogo"
+        android:transitionName="logo"
         android:layout_width="wrap_content"
         android:layout_height="361dp"
         android:layout_centerInParent="true"

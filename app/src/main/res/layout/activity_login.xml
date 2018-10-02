@@ -22,6 +22,7 @@
 
             <ImageView
                 android:id="@+id/logo"
+                android:transitionName="logo"
                 android:layout_width="170dp"
                 android:layout_height="170dp"
                 android:layout_alignParentTop="true"
