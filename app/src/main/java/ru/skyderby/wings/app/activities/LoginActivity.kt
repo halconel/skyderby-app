@@ -1,4 +1,4 @@
-package ru.skyderby.wings.app
+package ru.skyderby.wings.app.activities
 
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
@@ -26,6 +26,7 @@ import android.Manifest.permission.READ_CONTACTS
 import android.content.Intent
 
 import kotlinx.android.synthetic.main.activity_login.*
+import ru.skyderby.wings.app.R
 import java.io.IOException
 import java.util.*
 

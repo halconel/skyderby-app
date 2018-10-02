@@ -1,4 +1,4 @@
-package ru.skyderby.wings.app
+package ru.skyderby.wings.app.helpers
 
 import java.io.IOException
 import java.net.CookieManager
@@ -15,7 +15,7 @@ class WebkitCookieManagerProxy @JvmOverloads constructor(
         cookiePolicy: CookiePolicy? = null
 ) : CookieManager(null, cookiePolicy), CookieJar {
 
-    private val webkitCookieManager: android.webkit.CookieManager =
+    val webkitCookieManager: android.webkit.CookieManager =
             android.webkit.CookieManager.getInstance()
 
     @Throws(IOException::class)
@@ -32,7 +32,7 @@ class WebkitCookieManagerProxy @JvmOverloads constructor(
             ) return@forEach //Continue
             // process each of the headers
             responseHeaders[headerKey]!!.forEach { headerValue ->
-                this.webkitCookieManager.setCookie(url, headerValue)
+                webkitCookieManager.setCookie(url, headerValue)
             }
         }
     }
@@ -46,7 +46,7 @@ class WebkitCookieManagerProxy @JvmOverloads constructor(
         // prepare our response
         val res = java.util.HashMap<String, List<String>>()
         // get the cookie
-        val cookie = this.webkitCookieManager.getCookie(url)
+        val cookie = webkitCookieManager.getCookie(url)
         // return it
         if (cookie != null) res["Cookie"] = Arrays.asList(cookie)
         return res

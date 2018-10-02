@@ -1,5 +1,9 @@
 package ru.skyderby.wings.app.api
 
+/*
+* User profile
+ */
+
 data class CredentialsMessage (
     val id: Long,
     val name: String,
@@ -11,3 +15,7 @@ data class PhotoMessage (
     val medium: String,
     val thumb: String
 )
+
+/*
+* API category name
+ */

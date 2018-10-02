@@ -1,10 +1,12 @@
-package ru.skyderby.wings.app
+package ru.skyderby.wings.app.activities
 
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
+import ru.skyderby.wings.app.R
 import ru.skyderby.wings.app.api.SkyDerbyApiService
+import ru.skyderby.wings.app.helpers.PreferenceSave
 import java.io.IOException
 
 class SplashActivity : Activity() {
@@ -16,7 +18,8 @@ class SplashActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        //Start cookie magic
+        // Start cookie magic
+        android.webkit.CookieManager.getInstance().setAcceptCookie(true)
         java.net.CookieHandler.setDefault(SkyDerbyApiService.proxy)
 
         Handler().postDelayed({

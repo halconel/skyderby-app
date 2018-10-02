@@ -1,14 +1,13 @@
-package ru.skyderby.wings.app
+package ru.skyderby.wings.app.activities
 
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
-import android.webkit.WebViewDatabase
 
 import com.basecamp.turbolinks.TurbolinksSession
 import com.basecamp.turbolinks.TurbolinksAdapter
 import com.basecamp.turbolinks.TurbolinksView
+import ru.skyderby.wings.app.R
 
 class MainActivity : AppCompatActivity(), TurbolinksAdapter {
     // Change the BASE_URL to an address that your VM or device can hit.

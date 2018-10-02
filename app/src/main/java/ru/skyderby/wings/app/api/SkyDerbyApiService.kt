@@ -8,7 +8,8 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
 import okhttp3.OkHttpClient
-import ru.skyderby.wings.app.WebkitCookieManagerProxy
+import ru.skyderby.wings.app.helpers.WebkitCookieManagerProxy
+import java.net.CookiePolicy
 
 
 interface SkyDerbyApiService {
@@ -19,7 +20,7 @@ interface SkyDerbyApiService {
     companion object {
 
         val proxy by lazy {
-            WebkitCookieManagerProxy(null, java.net.CookiePolicy.ACCEPT_ALL)
+            WebkitCookieManagerProxy(null, CookiePolicy.ACCEPT_ALL)
         }
 
         fun create(): SkyDerbyApiService {

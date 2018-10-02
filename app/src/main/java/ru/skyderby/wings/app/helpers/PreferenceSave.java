@@ -1,8 +1,10 @@
-package ru.skyderby.wings.app;
+package ru.skyderby.wings.app.helpers;
 
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+
+import ru.skyderby.wings.app.R;
 
 /**
  * Created by EvSmirnov on 25.11.2017.
