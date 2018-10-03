@@ -7,13 +7,17 @@ import android.support.v7.app.AppCompatActivity
 import com.basecamp.turbolinks.TurbolinksSession
 import com.basecamp.turbolinks.TurbolinksAdapter
 import com.basecamp.turbolinks.TurbolinksView
+
+//import com.mikepenz.materialdrawer.DrawerBuilder
+
 import ru.skyderby.wings.app.R
+import ru.skyderby.wings.app.api.CredentialsMessage
 
 class MainActivity : AppCompatActivity(), TurbolinksAdapter {
-    // Change the BASE_URL to an address that your VM or device can hit.
-    private  val HOST = "skyderby.ru"
-    private var BASE_URL = "https://$HOST/?mobile=1"
-    private var INTENT_URL = "https://$HOST/?mobile=1"
+    // Change the baseURL to an address that your VM or device can hit.
+    private val hostName = "skyderby.ru"
+    private var baseURL = "https://$hostName/?mobile=1"
+    private var profile: CredentialsMessage? = null
 
     private var location: String? = null
     private var turbolinksView: TurbolinksView? = null
@@ -27,27 +31,21 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val mEmail = intent.getStringExtra(getString(R.string.USER_NAME))
-        val mPassword = intent.getStringExtra(getString(R.string.PASSWORD))
-        val mToken = intent.getStringExtra(getString(R.string.TOKEN))
-        val userID = intent.getLongExtra(getString(R.string.USER_ID), 0)
-        if (mToken == null || mEmail == null || mPassword == null || userID == 0L) {
-            // The credentials is empty
-        } else {
-            BASE_URL = "https://$HOST/profiles/$userID/edit?mobile=1"
-            INTENT_URL = "https://$HOST/profiles/$userID/edit?mobile=1"
+        //DrawerBuilder().withActivity(this).build()
+
+        profile = intent.getSerializableExtra(getString(R.string.PROFILE)) as? CredentialsMessage
+        if (profile != null) {
+            baseURL = "https://$hostName/profiles/${profile!!.id}/edit?mobile=1"
         }
 
-        TurbolinksSession.getDefault(this)
-                .webView
-                .settings
-                .setUserAgentString("turbolinks-view\\inventory-android")
+        TurbolinksSession.getDefault(this).webView.settings.userAgentString =
+                "turbolinks-view\\inventory-android"
 
         // Find the custom TurbolinksView object in your layout
         turbolinksView = findViewById(R.id.turbolinks_view)
 
         // For this example we set a default location, unless one is passed in through an intent
-        location = if (intent.getStringExtra(INTENT_URL) != null) intent.getStringExtra(INTENT_URL) else BASE_URL
+        location = intent.getStringExtra(getString(R.string.INTENT_URL)) ?: baseURL
 
         // Execute the visit
         TurbolinksSession.getDefault(this)
@@ -97,7 +95,7 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
     // routing logic to take you to the right place within your app.
     override fun visitProposedToLocationWithAction(location: String, action: String) {
         val intent = Intent(this, MainActivity::class.java)
-        intent.putExtra(INTENT_URL, location)
+        intent.putExtra(getString(R.string.INTENT_URL), location)
 
         this.startActivity(intent)
     }
@@ -115,7 +113,7 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
                     .adapter(this)
                     .restoreWithCachedSnapshot(false)
                     .view(turbolinksView)
-                    .visit(BASE_URL + "/error")
+                    .visit(baseURL + "/error")
         }
         else if(code == 401) {
 
