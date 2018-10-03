@@ -2,22 +2,31 @@ package ru.skyderby.wings.app.activities
 
 import android.content.Intent
 import android.os.Bundle
+import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
 
-import com.basecamp.turbolinks.TurbolinksSession
+import co.zsmb.materialdrawerkt.builders.accountHeader
+import co.zsmb.materialdrawerkt.builders.drawer
+import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
+import co.zsmb.materialdrawerkt.draweritems.divider
+import co.zsmb.materialdrawerkt.draweritems.profile.profile
+import co.zsmb.materialdrawerkt.imageloader.drawerImageLoader
+
 import com.basecamp.turbolinks.TurbolinksAdapter
+import com.basecamp.turbolinks.TurbolinksSession
 import com.basecamp.turbolinks.TurbolinksView
-
-//import com.mikepenz.materialdrawer.DrawerBuilder
-
+import com.mikepenz.fontawesome_typeface_library.FontAwesome
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.materialdrawer.util.DrawerUIUtils
 import ru.skyderby.wings.app.R
 import ru.skyderby.wings.app.api.CredentialsMessage
+
 
 class MainActivity : AppCompatActivity(), TurbolinksAdapter {
     // Change the baseURL to an address that your VM or device can hit.
     private val hostName = "skyderby.ru"
     private var baseURL = "https://$hostName/?mobile=1"
-    private var profile: CredentialsMessage? = null
+    private var userProfile: CredentialsMessage? = null
 
     private var location: String? = null
     private var turbolinksView: TurbolinksView? = null
@@ -31,11 +40,12 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        //DrawerBuilder().withActivity(this).build()
+        userProfile = intent.getSerializableExtra(getString(R.string.PROFILE)) as? CredentialsMessage
 
-        profile = intent.getSerializableExtra(getString(R.string.PROFILE)) as? CredentialsMessage
-        if (profile != null) {
-            baseURL = "https://$hostName/profiles/${profile!!.id}/edit?mobile=1"
+        addDrawer()
+
+        if (userProfile != null) {
+            baseURL = "https://$hostName/profiles/${userProfile!!.id}/edit?mobile=1"
         }
 
         TurbolinksSession.getDefault(this).webView.settings.userAgentString =
@@ -66,6 +76,7 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
                 .restoreWithCachedSnapshot(true)
                 .view(turbolinksView)
                 .visit(location)    }
+
     // -----------------------------------------------------------------------
     // TurbolinksAdapter interface
     // -----------------------------------------------------------------------
@@ -90,9 +101,11 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
 
     }
 
-    // The starting point for any href clicked inside a Turbolinks enabled site. In a simple case
-    // you can just open another activity, or in more complex cases, this would be a good spot for
-    // routing logic to take you to the right place within your app.
+    /**
+     * The starting point for any href clicked inside a Turbolinks enabled site. In a simple case
+     * you can just open another activity, or in more complex cases, this would be a good spot for
+     * routing logic to take you to the right place within your app.
+     */
     override fun visitProposedToLocationWithAction(location: String, action: String) {
         val intent = Intent(this, MainActivity::class.java)
         intent.putExtra(getString(R.string.INTENT_URL), location)
@@ -104,8 +117,10 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
     // Private
     // -----------------------------------------------------------------------
 
-    // Simply forwards to an error page, but you could alternatively show your own native screen
-    // or do whatever other kind of error handling you want.
+    /**
+     * Simply forwards to an error page, but you could alternatively show your own native screen
+     * or do whatever other kind of error handling you want.
+     */
     private fun handleError(code: Int) {
         if (code == 404) {
             TurbolinksSession.getDefault(this)
@@ -117,6 +132,56 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
         }
         else if(code == 401) {
 
+        }
+    }
+
+    private fun addDrawer() {
+
+//        drawerImageLoader {
+//            placeholder { ctx, tag ->
+//                DrawerUIUtils.getPlaceHolder(ctx)
+//            }
+//            set { imageView, uri, placeholder, tag ->
+//                Picasso.with(imageView.context)
+//                        .load(uri)
+//                        .placeholder(placeholder)
+//                        .into(imageView)
+//            }
+//            cancel { imageView ->
+//                Picasso.with(imageView.context)
+//                        .cancelRequest(imageView)
+//            }
+//        }
+
+        drawer {
+
+            actionBarDrawerToggleEnabled = false
+            //translucentStatusBar = false
+
+            accountHeader {
+                profile(userProfile!!.name, "samantha@gmail.com") {
+                    //icon = "http://some.site/samantha.png"
+                }
+            }
+
+            primaryItem("Home") {
+                iicon = GoogleMaterial.Icon.gmd_home
+            }
+            primaryItem("Tracks") {
+                iicon = FontAwesome.Icon.faw_chart_area
+            }
+            primaryItem("Competitions") {
+                iicon = FontAwesome.Icon.faw_medal
+            }
+            primaryItem("Achievements") {
+                iicon = GoogleMaterial.Icon.gmd_timer
+            }
+            primaryItem("Places") {
+                iicon = GoogleMaterial.Icon.gmd_place
+            }
+            primaryItem("Settings") {
+                iicon = GoogleMaterial.Icon.gmd_settings
+            }
         }
     }
 }
