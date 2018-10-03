@@ -15,14 +15,14 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/MaterialDrawerTheme.ActionBar.TranslucentStatus">
+        android:theme="@style/MaterialDrawerTheme.Light.ActionBar">
 
         <!-- Splash activity -->
         <activity
             android:name=".activities.SplashActivity"
             android:label="@string/app_name"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
+            android:theme="@style/AppTheme.Launcher">
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -32,7 +32,7 @@
         <!-- Login activity -->
         <activity
             android:name=".activities.LoginActivity"
-            android:theme="@style/WithGradientBackground"
+            android:theme="@style/AppTheme.Launcher"
             android:windowSoftInputMode="adjustResize" />
         <!-- Main activity with turbolinks web view -->
         <activity

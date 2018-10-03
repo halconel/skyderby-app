@@ -9,102 +9,97 @@
     tools:context=".activities.LoginActivity">
 
     <RelativeLayout
-        android:layout_width="710dp"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true">
+        android:layout_width="250dp"
+        android:layout_height="match_parent">
 
-        <RelativeLayout
-            android:layout_width="250dp"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:id="@+id/logo"
-                android:transitionName="logo"
-                android:layout_width="200dp"
-                android:layout_height="200dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:layout_marginTop="0dp"
-                android:adjustViewBounds="false"
-                app:srcCompat="@drawable/logo" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="430dp"
-            android:layout_height="330dp"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true">
-
-            <AutoCompleteTextView
-                android:id="@+id/email"
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="30dp"
-                android:background="#11000000"
-                android:drawableStart="@drawable/ic_action_user"
-                android:ems="10"
-                android:hint="Email"
-                android:inputType="textPersonName" />
-
-            <EditText
-                android:id="@+id/password"
-                android:layout_width="200dp"
-                android:layout_height="40dp"
-                android:layout_below="@id/email"
-                android:layout_centerHorizontal="true"
-                android:background="#11000000"
-                android:drawableStart="@drawable/ic_action_pass"
-                android:ems="10"
-                android:hint="Password"
-                android:inputType="textPassword" />
-
-            <androidx.cardview.widget.CardView
-                android:id="@+id/email_sign_in_button"
-                android:layout_width="300dp"
-                android:layout_height="50dp"
-                android:layout_below="@id/password"
-                android:layout_centerHorizontal="true"
-                android:layout_margin="40dp"
-                android:elevation="10dp"
-                app:cardBackgroundColor="@color/colorAccent"
-                app:cardCornerRadius="25dp">
-
-                <RelativeLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
-
-                    <ProgressBar
-                        android:id="@+id/login_progress"
-                        style="@android:style/Widget.Holo.Light.ProgressBar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="50dp"
-                        android:layout_alignParentStart="true"
-                        android:layout_alignParentTop="true"
-                        android:layout_marginStart="72dp"
-                        android:indeterminateTint="@android:color/white"
-                        android:visibility="gone" />
-
-                    <TextView
-                        android:id="@+id/textViewLogin"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_centerInParent="true"
-                        android:text="Login"
-                        android:textColor="#fff"
-                        android:textSize="18sp" />
-
-                </RelativeLayout>
-            </androidx.cardview.widget.CardView>
-
-            <TextView
-                android:id="@+id/textViewRegister"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/email_sign_in_button"
-                android:layout_centerHorizontal="true"
-                android:text="Register Here..."
-                android:textSize="18sp" />
-        </RelativeLayout>
+        <ImageView
+            android:id="@+id/logo"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginTop="0dp"
+            android:adjustViewBounds="false"
+            android:transitionName="logo"
+            app:srcCompat="@drawable/logo" />
     </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="430dp"
+        android:layout_height="330dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true">
+
+        <AutoCompleteTextView
+            android:id="@+id/email"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="30dp"
+            android:background="#11000000"
+            android:drawableStart="@drawable/ic_action_user"
+            android:ems="10"
+            android:hint="Email"
+            android:inputType="textPersonName" />
+
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="200dp"
+            android:layout_height="40dp"
+            android:layout_below="@id/email"
+            android:layout_centerHorizontal="true"
+            android:background="#11000000"
+            android:drawableStart="@drawable/ic_action_pass"
+            android:ems="10"
+            android:hint="Password"
+            android:inputType="textPassword" />
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/email_sign_in_button"
+            android:layout_width="300dp"
+            android:layout_height="50dp"
+            android:layout_below="@id/password"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="40dp"
+            android:elevation="10dp"
+            app:cardBackgroundColor="@color/colorAccent"
+            app:cardCornerRadius="25dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <ProgressBar
+                    android:id="@+id/login_progress"
+                    style="@android:style/Widget.Holo.Light.ProgressBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="50dp"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginStart="72dp"
+                    android:indeterminateTint="@android:color/white"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/textViewLogin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:text="Login"
+                    android:textColor="#fff"
+                    android:textSize="18sp" />
+
+            </RelativeLayout>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/textViewRegister"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/email_sign_in_button"
+            android:layout_centerHorizontal="true"
+            android:text="Register Here..."
+            android:textSize="18sp" />
+    </RelativeLayout>
+
 </RelativeLayout>
