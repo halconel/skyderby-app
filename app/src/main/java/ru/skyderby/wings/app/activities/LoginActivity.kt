@@ -4,8 +4,8 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.annotation.TargetApi
 import android.content.pm.PackageManager
-import android.support.design.widget.Snackbar
-import android.support.v7.app.AppCompatActivity
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
 import android.app.LoaderManager.LoaderCallbacks
 import android.content.CursorLoader
 import android.content.Loader
@@ -24,9 +24,12 @@ import ru.skyderby.wings.app.api.SkyDerbyApiService
 
 import android.Manifest.permission.READ_CONTACTS
 import android.content.Intent
-
 import kotlinx.android.synthetic.main.activity_login.*
+
+import retrofit2.Response
 import ru.skyderby.wings.app.R
+import ru.skyderby.wings.app.api.CredentialsMessage
+import ru.skyderby.wings.app.helpers.PreferenceSave
 import java.io.IOException
 import java.util.*
 
@@ -221,12 +224,9 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         email.setAdapter(adapter)
     }
 
-    private fun startMainActivity(username: String?, password: String?, token: String?, userID: Long) {
+    private fun startMainActivity(profile: CredentialsMessage?) {
         val intent = Intent(this@LoginActivity, MainActivity::class.java).apply {
-            putExtra(getString(R.string.USER_NAME), username)
-            putExtra(getString(R.string.PASSWORD), password)
-            putExtra(getString(R.string.TOKEN), token)
-            putExtra(getString(R.string.USER_ID), userID)
+            putExtra(getString(R.string.PROFILE), profile)
         }
         startActivity(intent)
     }
@@ -252,21 +252,17 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             private val mPassword: String
     ) : AsyncTask<Void, Void, Boolean>() {
 
-        private var token: String? = null
-        var userID: Long? = null
+        var profileApiMessage: Response<CredentialsMessage>? = null
 
         override fun doInBackground(vararg params: Void): Boolean? {
             // Credentials
             val authHeader = ("$mEmail:$mPassword").toByteArray()
-            token = "Basic " + android
-                    .util
-                    .Base64
-                    .encodeToString(authHeader, android.util.Base64.NO_WRAP)
+            val token = "Basic ${android.util.Base64
+                    .encodeToString(authHeader, android.util.Base64.NO_WRAP)}"
             // Request user data to the sky derby API
             try {
-                val response = skyDerbyApiService.getProfile(token!!).execute()
-                if (response.isSuccessful) userID = response.body()!!.id
-                return response.isSuccessful
+                profileApiMessage = skyDerbyApiService.getProfile(token).execute()
+                return profileApiMessage!!.isSuccessful
             } catch (e: IOException) {
                 e.printStackTrace()
             }
@@ -279,7 +275,15 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
             showProgress(false)
 
             if (success!!) {
-                startMainActivity(mEmail, mPassword, token!!, userID!!)
+                // Save credentials to preference
+                PreferenceSave
+                        .getInstance(this@LoginActivity)
+                        .login = mEmail
+                PreferenceSave
+                        .getInstance(this@LoginActivity)
+                        .password = mPassword
+                // Start main activity
+                startMainActivity(profileApiMessage?.body())
                 finish()
             } else {
                 password.error = getString(R.string.error_incorrect_password)

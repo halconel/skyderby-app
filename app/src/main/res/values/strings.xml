@@ -35,6 +35,8 @@
     <string name="RESPONSE_CODE">ru.skyderby.wings.app.response_code</string>
     <string name="TOKEN">ru.skyderby.wings.app.token</string>
     <string name="USER_ID">ru.skyderby.wings.app.userID</string>
-
+    <string name="PHOTO">ru.skyderby.wings.app.userID</string>
+    <string name="INTENT_URL">ru.skyderby.wings.app.intentURL</string>
+    <string name="PROFILE">ru.skyderby.wings.app.intentURL</string>
 
 </resources>

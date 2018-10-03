@@ -8,7 +8,7 @@ import ru.skyderby.wings.app.R
 import ru.skyderby.wings.app.api.SkyDerbyApiService
 import ru.skyderby.wings.app.helpers.PreferenceSave
 import java.io.IOException
-import android.support.v4.app.ActivityOptionsCompat
+import androidx.core.app.ActivityOptionsCompat
 import android.view.View
 import kotlinx.android.synthetic.main.activity_splash.*
 
