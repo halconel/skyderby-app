@@ -19,6 +19,7 @@ interface SkyDerbyApiService {
 
     companion object {
 
+        val hostName: String = "skyderby.ru"
         val proxy by lazy {
             WebkitCookieManagerProxy(null, CookiePolicy.ACCEPT_ALL)
         }
