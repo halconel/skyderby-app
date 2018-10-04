@@ -29,7 +29,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import retrofit2.Response
 import ru.skyderby.wings.app.R
 import ru.skyderby.wings.app.api.CredentialsMessage
-import ru.skyderby.wings.app.helpers.PreferenceSave
+import ru.skyderby.wings.app.helpers.Preferences
 import java.io.IOException
 import java.util.*
 
@@ -276,12 +276,9 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
             if (success!!) {
                 // Save credentials to preference
-                PreferenceSave
-                        .getInstance(this@LoginActivity)
-                        .login = mEmail
-                PreferenceSave
-                        .getInstance(this@LoginActivity)
-                        .password = mPassword
+                Preferences.init(this@LoginActivity)
+                Preferences.username = mEmail
+                Preferences.password = mPassword
                 // Start main activity
                 startMainActivity(profileApiMessage?.body())
                 finish()

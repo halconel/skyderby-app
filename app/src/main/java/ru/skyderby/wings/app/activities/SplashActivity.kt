@@ -4,17 +4,15 @@ import android.app.Activity
 import android.content.Intent
 import android.os.AsyncTask
 import android.os.Bundle
-import android.os.Handler
 import ru.skyderby.wings.app.R
 import ru.skyderby.wings.app.api.SkyDerbyApiService
-import ru.skyderby.wings.app.helpers.PreferenceSave
 import java.io.IOException
 import androidx.core.app.ActivityOptionsCompat
 import android.view.View
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_splash.*
 import retrofit2.Response
 import ru.skyderby.wings.app.api.CredentialsMessage
+import ru.skyderby.wings.app.helpers.Preferences
 
 
 class SplashActivity : Activity() {
@@ -25,11 +23,13 @@ class SplashActivity : Activity() {
 
         // Start cookie magic
         android.webkit.CookieManager.getInstance().setAcceptCookie(true)
+        android.webkit.CookieManager.getInstance().removeAllCookies(null)
         java.net.CookieHandler.setDefault(SkyDerbyApiService.proxy)
 
         // Get authorization credentials
-        val username = PreferenceSave.getInstance(this).login
-        val password = PreferenceSave.getInstance(this).password
+        Preferences.init(this)
+        val username = Preferences.username
+        val password = Preferences.password
 
         val mAuthTask = UserLoginTask(username, password)
         mAuthTask!!.execute(null as Void?)
