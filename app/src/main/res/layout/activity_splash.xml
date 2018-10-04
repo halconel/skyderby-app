@@ -4,15 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/gradient" >
-
-    <ImageView
-        android:id="@+id/imgLogo"
-        android:transitionName="logo"
-        android:layout_width="wrap_content"
-        android:layout_height="361dp"
-        android:layout_centerInParent="true"
-        android:src="@drawable/logo" />
+    android:background="@drawable/launch_screen" >
 
     <ImageView
         android:id="@+id/imageHeart"
@@ -45,10 +37,24 @@
         android:gravity="center_horizontal"
         android:text="@string/by_skyderby_team" />
 
+    <com.github.ybq.android.spinkit.SpinKitView xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/spin_kit"
+        style="@style/SpinKitView.ThreeBounce"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/made_with_love_text"
+        android:layout_alignParentTop="false"
+        android:layout_centerHorizontal="true"
+        android:layout_gravity="center"
+        app:SpinKit_Color="@color/colorPrimaryLight" />
+
+
     <com.basecamp.turbolinks.TurbolinksView
         android:id="@+id/turbolinks_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="invisible" />
+        android:visibility="invisible" >
+
+    </com.basecamp.turbolinks.TurbolinksView>
 
 </RelativeLayout>

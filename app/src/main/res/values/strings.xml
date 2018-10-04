@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">Skyderby</string>
+    <!-- Toolbar actions -->
     <string name="action_settings">Settings</string>
+    <string name="action_share">Share</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -33,5 +35,6 @@
     <string name="events">https://skyderby.ru/events?mobile=1</string>
     <string name="virtual_competitions">https://skyderby.ru/virtual_competitions?mobile=1</string>
     <string name="places">https://skyderby.ru/places?mobile=1</string>
+    <string name="asset_statements" translatable="false">[{ \"include\": \"https://skyderby.ru/.well-known/assetlinks.json\" }]</string>
 
 </resources>

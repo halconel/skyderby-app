@@ -3,8 +3,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     tools:context="ru.skyderby.wings.app.activities.MainActivity">
     <item
+        android:id="@+id/action_share"
+        android:title="@string/action_share"
+        app:showAsAction="ifRoom"
+        app:ico_icon="gmd_share"
+        app:ico_size="24dp"
+        app:ico_color="@android:color/white" />
+    <item
         android:id="@+id/action_settings"
-        android:orderInCategory="100"
         android:title="@string/action_settings"
-        app:showAsAction="never" />
+        app:showAsAction="never"
+        app:ico_icon="gmd_setting"
+        app:ico_size="24dp"
+        app:ico_color="@android:color/white" />
+
 </menu>

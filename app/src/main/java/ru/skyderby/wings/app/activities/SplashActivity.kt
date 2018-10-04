@@ -78,8 +78,8 @@ class SplashActivity : AppCompatActivity(), TurbolinksAdapter {
     }
 
     override fun visitCompleted() {
-        //startMainActivity(profileApiMessage?.body())
-        //finish()
+        startMainActivity(profileApiMessage?.body())
+        finish()
     }
 
     override fun visitProposedToLocationWithAction(location: String, action: String) {
@@ -100,9 +100,7 @@ class SplashActivity : AppCompatActivity(), TurbolinksAdapter {
 
     private fun startLoginActivity() {
         val intent = Intent(this, LoginActivity::class.java)
-        val options = ActivityOptionsCompat
-                .makeSceneTransitionAnimation(this, imgLogo as View, "logo")
-        startActivity(intent, options.toBundle())
+        startActivity(intent)
     }
 
     private val skyDerbyApiService by lazy {
@@ -148,10 +146,10 @@ class SplashActivity : AppCompatActivity(), TurbolinksAdapter {
                             .view(turbolinksView)
                             .visit(location)
                 }
-                startMainActivity(profileApiMessage?.body())
+                //startMainActivity(profileApiMessage?.body())
             }
             else startLoginActivity()
-            finish()
+            //finish()
         }
     }
 

@@ -3,6 +3,7 @@ package ru.skyderby.wings.app.activities
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.view.Menu
 import android.view.View
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
@@ -33,6 +34,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import ru.skyderby.wings.app.R
 import ru.skyderby.wings.app.api.CredentialsMessage
 import ru.skyderby.wings.app.helpers.Preferences
+import ru.ztrap.iconics.kt.setIconicsFactory
 import kotlin.reflect.KClass
 
 class MainActivity : AppCompatActivity(), TurbolinksAdapter {
@@ -52,6 +54,7 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
     // -----------------------------------------------------------------------
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        layoutInflater.setIconicsFactory(delegate)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
@@ -68,6 +71,8 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
         }
 
         addDrawer(savedInstanceState)
+
+        toolbar
     }
 
     override fun onRestart() {
@@ -94,6 +99,11 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
         result.saveInstanceState(outState)
         headerResult.saveInstanceState(outState)
         super.onSaveInstanceState(outState)
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_main, menu)
+        return super.onCreateOptionsMenu(menu)
     }
 
     // -----------------------------------------------------------------------
@@ -142,8 +152,16 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
         if (userProfile != null) {
             baseURL = "https://$hostName/profiles/${userProfile!!.id}?mobile=1"
         }
-        // For this example we set a default location, unless one is passed in through an intent
-        location = intent.getStringExtra(getString(R.string.INTENT_URL)) ?: baseURL
+
+        val appLinkIntent = intent
+        val appLinkAction = appLinkIntent.action
+        val appLinkData = appLinkIntent.data
+        if (Intent.ACTION_VIEW == appLinkAction) {
+            location = appLinkData!!.toString()
+        }
+        else {
+            location = intent.getStringExtra(getString(R.string.INTENT_URL)) ?: baseURL
+        }
         // Execute the visit
         if (coldStart) {
             TurbolinksSession.getDefault(this)
