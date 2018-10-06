@@ -1,17 +1,15 @@
 package ru.skyderby.wings.app.activities
 
+import android.Manifest.permission.READ_CONTACTS
 import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
-import android.annotation.TargetApi
-import android.content.pm.PackageManager
-import com.google.android.material.snackbar.Snackbar
-import androidx.appcompat.app.AppCompatActivity
 import android.app.LoaderManager.LoaderCallbacks
 import android.content.CursorLoader
+import android.content.Intent
 import android.content.Loader
+import android.content.pm.PackageManager
 import android.database.Cursor
 import android.net.Uri
-import android.os.AsyncTask
 import android.os.Build
 import android.os.Bundle
 import android.provider.ContactsContract
@@ -20,30 +18,31 @@ import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import ru.skyderby.wings.app.api.SkyDerbyApiService
-
-import android.Manifest.permission.READ_CONTACTS
-import android.content.Intent
+import androidx.appcompat.app.AppCompatActivity
+import com.basecamp.turbolinks.TurbolinksAdapter
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_login.*
-
 import retrofit2.Response
 import ru.skyderby.wings.app.R
 import ru.skyderby.wings.app.api.CredentialsMessage
+import ru.skyderby.wings.app.helpers.AttemptLogin
 import ru.skyderby.wings.app.helpers.Preferences
-import java.io.IOException
+import ru.ztrap.iconics.kt.setIconicsFactory
+import java.lang.ref.WeakReference
 import java.util.*
 
 /**
  * A login screen that offers login via email/password.
  */
-class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
-
+class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, TurbolinksAdapter {
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
     private var mAuthTask: UserLoginTask? = null
+    var profileApiMessage: CredentialsMessage? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        layoutInflater.setIconicsFactory(delegate)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         // Set up the login form.
@@ -59,31 +58,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         email_sign_in_button.setOnClickListener { attemptLogin() }
     }
 
-    private fun populateAutoComplete() {
-        if (!mayRequestContacts()) {
-            return
-        }
-
-        loaderManager.initLoader(0, null, this)
-    }
-
-    private fun mayRequestContacts(): Boolean {
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            return true
-        }
-        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-            return true
-        }
-        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(email, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
-                    .setAction(android.R.string.ok,
-                            { requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS) })
-        } else {
-            requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS)
-        }
-        return false
-    }
-
     /**
      * Callback received when a permissions request has been completed.
      */
@@ -96,95 +70,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         }
     }
 
-
-    /**
-     * Attempts to sign in or register the account specified by the login form.
-     * If there are form errors (invalid email, missing fields, etc.), the
-     * errors are presented and no actual login attempt is made.
-     */
-    private fun attemptLogin() {
-        if (mAuthTask != null) {
-            return
-        }
-
-        // Reset errors.
-        email.error = null
-        password.error = null
-
-        // Store values at the time of the login attempt.
-        val emailStr = email.text.toString()
-        val passwordStr = password.text.toString()
-
-        var cancel = false
-        var focusView: View? = null
-
-        // Check for a valid password, if the user entered one.
-        if (!TextUtils.isEmpty(passwordStr) && !isPasswordValid(passwordStr)) {
-            password.error = getString(R.string.error_invalid_password)
-            focusView = password
-            cancel = true
-        }
-
-        // Check for a valid email address.
-        if (TextUtils.isEmpty(emailStr)) {
-            email.error = getString(R.string.error_field_required)
-            focusView = email
-            cancel = true
-        } else if (!isEmailValid(emailStr)) {
-            email.error = getString(R.string.error_invalid_email)
-            focusView = email
-            cancel = true
-        }
-
-        if (cancel) {
-            // There was an error; don't attempt login and focus the first
-            // form field with an error.
-            focusView?.requestFocus()
-        } else {
-            // Show a progress spinner, and kick off a background task to
-            // perform the user login attempt.
-            showProgress(true)
-            mAuthTask = UserLoginTask(emailStr, passwordStr)
-            mAuthTask!!.execute(null as Void?)
-        }
-    }
-
-    private fun isEmailValid(email: String): Boolean {
-        //TODO: Replace this with your own logic
-        return email.contains("@")
-    }
-
-    private fun isPasswordValid(password: String): Boolean {
-        //TODO: Replace this with your own logic
-        return password.length > 4
-    }
-
-    /**
-     * Shows the progress UI and hides the login form.
-     */
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
-    private fun showProgress(show: Boolean) {
-        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
-        // for very easy animations. If available, use these APIs to fade-in
-        // the progress spinner.
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
-            val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
-
-            login_progress.visibility = if (show) View.VISIBLE else View.GONE
-            login_progress.animate()
-                    .setDuration(shortAnimTime)
-                    .alpha((if (show) 1 else 0).toFloat())
-                    .setListener(object : AnimatorListenerAdapter() {
-                        override fun onAnimationEnd(animation: Animator) {
-                            login_progress.visibility = if (show) View.VISIBLE else View.GONE
-                        }
-                    })
-        } else {
-            // The ViewPropertyAnimator APIs are not available, so simply show
-            // and hide the relevant UI components.
-            login_progress.visibility = if (show) View.VISIBLE else View.GONE
-        }
-    }
 
     override fun onCreateLoader(i: Int, bundle: Bundle?): Loader<Cursor> {
         return CursorLoader(this,
@@ -216,6 +101,42 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
 
     }
 
+    object ProfileQuery {
+        val PROJECTION = arrayOf(
+                ContactsContract.CommonDataKinds.Email.ADDRESS,
+                ContactsContract.CommonDataKinds.Email.IS_PRIMARY)
+        val ADDRESS = 0
+        val IS_PRIMARY = 1
+    }
+
+    // -----------------------------------------------------------------------
+    // TurbolinksAdapter interface
+    // -----------------------------------------------------------------------
+
+    override fun onPageFinished() {
+    }
+
+    override fun pageInvalidated() {
+    }
+
+    override fun onReceivedError(errorCode: Int) {
+    }
+
+    override fun visitCompleted() {
+        startMainActivity(profileApiMessage)
+        finish()
+    }
+
+    override fun requestFailedWithStatusCode(statusCode: Int) {
+    }
+
+    override fun visitProposedToLocationWithAction(location: String?, action: String?) {
+    }
+
+    // -----------------------------------------------------------------------
+    // Private
+    // -----------------------------------------------------------------------
+
     private fun addEmailsToAutoComplete(emailAddressCollection: List<String>) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         val adapter = ArrayAdapter(this@LoginActivity,
@@ -231,66 +152,143 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor> {
         startActivity(intent)
     }
 
-    object ProfileQuery {
-        val PROJECTION = arrayOf(
-                ContactsContract.CommonDataKinds.Email.ADDRESS,
-                ContactsContract.CommonDataKinds.Email.IS_PRIMARY)
-        val ADDRESS = 0
-        val IS_PRIMARY = 1
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    private fun showProgress(show: Boolean) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        val shortAnimTime = resources.getInteger(android.R.integer.config_shortAnimTime).toLong()
+
+        login_progress.visibility = if (show) View.VISIBLE else View.GONE
+        login_progress.animate()
+                .setDuration(shortAnimTime)
+                .alpha((if (show) 1 else 0).toFloat())
+                .setListener(object : AnimatorListenerAdapter() {
+                    override fun onAnimationEnd(animation: Animator) {
+                        login_progress.visibility = if (show) View.VISIBLE else View.GONE
+                    }
+                })
     }
 
-    private val skyDerbyApiService by lazy {
-        SkyDerbyApiService.create()
+    /**
+     * Attempts to sign in or register the account specified by the login form.
+     * If there are form errors (invalid email, missing fields, etc.), the
+     * errors are presented and no actual login attempt is made.
+     */
+    private fun attemptLogin() {
+        if (mAuthTask != null) return
+
+        // Store values at the time of the login attempt.
+        val emailStr = email.text.toString()
+        val passwordStr = password.text.toString()
+
+        // Set fields error message
+        email.error = when {
+            TextUtils.isEmpty(emailStr) -> getString(R.string.error_field_required)
+            !isEmailValid(emailStr) -> getString(R.string.error_invalid_email)
+            else -> null
+        }
+        password.error = when {
+            checkPassword(passwordStr) -> getString(R.string.error_invalid_password)
+            else -> null
+        }
+        // There was an error; don't attempt login and focus the first
+        // form field with an error.
+        when {
+            email.error != null -> email
+            password.error != null -> password
+            else -> null
+        }?.requestFocus()
+
+        if (checkEmail(emailStr) || checkPassword(passwordStr)) {
+        } else {
+            // Show a progress spinner, and kick off a background task to
+            // perform the user login attempt.
+            showProgress(true)
+            UserLoginTask(this, R.id.turbolinks_view).execute(true)
+        }
+    }
+
+    private fun checkEmail(emailStr: String): Boolean =
+            TextUtils.isEmpty(emailStr) || !isEmailValid(emailStr)
+
+    private fun checkPassword(passwordStr: String): Boolean =
+            TextUtils.isEmpty(passwordStr) || !isPasswordValid(passwordStr)
+
+    private fun isEmailValid(email: String): Boolean {
+        //TODO: Replace this with your own logic
+        return email.contains("@")
+    }
+
+    private fun isPasswordValid(password: String): Boolean {
+        //TODO: Replace this with your own logic
+        return password.length > 4
+    }
+
+    private fun populateAutoComplete() {
+        if (!mayRequestContacts()) {
+            return
+        }
+
+        loaderManager.initLoader(0, null, this)
+    }
+
+    private fun mayRequestContacts(): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true
+        }
+        if (checkSelfPermission(READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+            return true
+        }
+        if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
+            Snackbar.make(email, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+                    .setAction(android.R.string.ok) {
+                        requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS)
+                    }
+        } else {
+            requestPermissions(arrayOf(READ_CONTACTS), REQUEST_READ_CONTACTS)
+        }
+        return false
     }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    inner class UserLoginTask internal constructor(
-            private val mEmail: String,
-            private val mPassword: String
-    ) : AsyncTask<Void, Void, Boolean>() {
+    class UserLoginTask(loginActivity: LoginActivity, id: Int)
+        : AttemptLogin(
+            activityReference = WeakReference(loginActivity),
+            adapterReference = WeakReference(loginActivity),
+            viewID = id) {
 
-        var profileApiMessage: Response<CredentialsMessage>? = null
+        //var profileApiMessage: Response<CredentialsMessage>? = null
 
-        override fun doInBackground(vararg params: Void): Boolean? {
-            // Credentials
-            val authHeader = ("$mEmail:$mPassword").toByteArray()
-            val token = "Basic ${android.util.Base64
-                    .encodeToString(authHeader, android.util.Base64.NO_WRAP)}"
-            // Request user data to the sky derby API
-            try {
-                profileApiMessage = skyDerbyApiService.getProfile(token).execute()
-                return profileApiMessage!!.isSuccessful
-            } catch (e: IOException) {
-                e.printStackTrace()
-            }
+        override fun onPostExecute(result: Response<CredentialsMessage>?) {
+            val activity = activityReference.get() as? LoginActivity ?: return
+            if(activity.isFinishing || activity.isDestroyed) return
+            activity.mAuthTask = null
+            activity.showProgress(false)
 
-            return false
-        }
-
-        override fun onPostExecute(success: Boolean?) {
-            mAuthTask = null
-            showProgress(false)
-
-            if (success!!) {
+            if (result?.isSuccessful == true) {
+                activity.profileApiMessage = result.body()
                 // Save credentials to preference
-                Preferences.init(this@LoginActivity)
-                Preferences.username = mEmail
-                Preferences.password = mPassword
-                // Start main activity
-                startMainActivity(profileApiMessage?.body())
-                finish()
+                Preferences.init(activity)
+                Preferences.username = activity.email.text.toString()
+                Preferences.password = activity.password.text.toString()
             } else {
-                password.error = getString(R.string.error_incorrect_password)
-                password.requestFocus()
+                activity.password.error = activity.getString(R.string.error_incorrect_password)
+                activity.password.requestFocus()
             }
+            super.onPostExecute(result)
         }
 
         override fun onCancelled() {
-            mAuthTask = null
-            showProgress(false)
+            val activity = activityReference.get() as? LoginActivity ?: return
+            if(activity.isFinishing || activity.isDestroyed) return
+            activity.mAuthTask = null
+            activity.showProgress(false)
         }
     }
 

@@ -5,10 +5,6 @@
     <string name="action_share">Share</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password (optional)</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
     <string name="error_invalid_email">This email address is invalid</string>
     <string name="error_invalid_password">This password is too short</string>
     <string name="error_incorrect_password">This password is incorrect</string>
@@ -16,16 +12,10 @@
     <string name="permission_rationale">"Contacts permissions are needed for providing email
         completions."
     </string>
+    <string name="made_with">©2014–2018 Made with {gmd_favorite}</string>
     <string name="by_skyderby_team">by Skyderby Team</string>
-    <string name="made_with">©2014-2018 Made with</string>
 
     <!-- Strings related to put\get intent extra -->
-    <string name="USER_NAME">ru.skyderby.wings.app.username</string>
-    <string name="PASSWORD">ru.skyderby.wings.app.password</string>
-    <string name="RESPONSE_CODE">ru.skyderby.wings.app.responseCode</string>
-    <string name="TOKEN">ru.skyderby.wings.app.token</string>
-    <string name="USER_ID">ru.skyderby.wings.app.userID</string>
-    <string name="PHOTO">ru.skyderby.wings.app.photo</string>
     <string name="INTENT_URL">ru.skyderby.wings.app.intentURL</string>
     <string name="PROFILE">ru.skyderby.wings.app.profile</string>
     <string name="COLD_START">ru.skyderby.wings.app.coldStart</string>
@@ -36,5 +26,10 @@
     <string name="virtual_competitions">https://skyderby.ru/virtual_competitions?mobile=1</string>
     <string name="places">https://skyderby.ru/places?mobile=1</string>
     <string name="asset_statements" translatable="false">[{ \"include\": \"https://skyderby.ru/.well-known/assetlinks.json\" }]</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="register_here">Register Here…</string>
+    <string name="logo_description">Logo</string>
 
 </resources>

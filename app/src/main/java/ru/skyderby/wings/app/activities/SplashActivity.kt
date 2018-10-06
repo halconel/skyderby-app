@@ -1,41 +1,34 @@
 package ru.skyderby.wings.app.activities
 
-import android.annotation.SuppressLint
 import android.content.Intent
-import android.os.AsyncTask
 import android.os.Bundle
-import ru.skyderby.wings.app.R
-import ru.skyderby.wings.app.api.SkyDerbyApiService
-import java.io.IOException
-import androidx.core.app.ActivityOptionsCompat
-import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import co.zsmb.materialdrawerkt.imageloader.drawerImageLoader
 import com.basecamp.turbolinks.TurbolinksAdapter
-import com.basecamp.turbolinks.TurbolinksSession
-import com.basecamp.turbolinks.TurbolinksView
 import com.mikepenz.materialdrawer.util.DrawerUIUtils
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_splash.*
 import retrofit2.Response
+import ru.skyderby.wings.app.R
 import ru.skyderby.wings.app.api.CredentialsMessage
-import ru.skyderby.wings.app.helpers.Preferences
+import ru.skyderby.wings.app.api.SkyDerbyApiService
+import ru.skyderby.wings.app.helpers.AttemptLogin
+import ru.ztrap.iconics.kt.setIconicsFactory
+import java.lang.ref.WeakReference
 
 
 class SplashActivity : AppCompatActivity(), TurbolinksAdapter {
-    var profileApiMessage: Response<CredentialsMessage>? = null
+    var profileApiMessage: CredentialsMessage? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        layoutInflater.setIconicsFactory(delegate)
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
         // Start cookie magic
         android.webkit.CookieManager.getInstance().setAcceptCookie(true)
         android.webkit.CookieManager.getInstance().removeAllCookies(null)
         java.net.CookieHandler.setDefault(SkyDerbyApiService.proxy)
-        // Get authorization credentials
-        Preferences.init(this)
-        val username = Preferences.username
-        val password = Preferences.password
+        // Attempt login
+        UserLoginTask(this, R.id.turbolinks_view).execute(true)
         // Initialize image loader for drawer
         drawerImageLoader {
             placeholder { ctx, tag ->
@@ -52,9 +45,6 @@ class SplashActivity : AppCompatActivity(), TurbolinksAdapter {
                         .cancelRequest(imageView)
             }
         }
-        // Attempt login
-        val mAuthTask = UserLoginTask(username, password)
-        mAuthTask!!.execute(null as Void?)
     }
 
     // -----------------------------------------------------------------------
@@ -78,7 +68,7 @@ class SplashActivity : AppCompatActivity(), TurbolinksAdapter {
     }
 
     override fun visitCompleted() {
-        startMainActivity(profileApiMessage?.body())
+        startMainActivity(profileApiMessage)
         finish()
     }
 
@@ -98,64 +88,31 @@ class SplashActivity : AppCompatActivity(), TurbolinksAdapter {
         startActivity(intent)
     }
 
-    private fun startLoginActivity() {
+    fun startLoginActivity() {
         val intent = Intent(this, LoginActivity::class.java)
         startActivity(intent)
-    }
-
-    private val skyDerbyApiService by lazy {
-        SkyDerbyApiService.create()
     }
 
     /**
      * Represents an asynchronous login/registration task used to authenticate
      * the user.
      */
-    inner class UserLoginTask internal constructor(
-            private val mEmail: String,
-            private val mPassword: String
-    ) : AsyncTask<Void, Void, Boolean>() {
+    class UserLoginTask(splashActivity: SplashActivity, id: Int)
+        : AttemptLogin(
+            activityReference = WeakReference(splashActivity),
+            adapterReference = WeakReference(splashActivity),
+            viewID = id) {
 
-        override fun doInBackground(vararg params: Void): Boolean? {
-            // Credentials
-            val authHeader = ("$mEmail:$mPassword").toByteArray()
-            val token = "Basic ${android.util.Base64
-                    .encodeToString(authHeader, android.util.Base64.NO_WRAP)}"
-            // Request user data to the sky derby API
-            try {
-                profileApiMessage = skyDerbyApiService.getProfile(token).execute()
-                return profileApiMessage!!.isSuccessful
-            } catch (e: IOException) {
-                e.printStackTrace()
+        override fun onPostExecute(result: Response<CredentialsMessage>?) {
+            val activity = activityReference.get() as? SplashActivity ?: return
+            if(activity.isFinishing || activity.isDestroyed) return
+            when {
+                result?.isSuccessful == true -> activity.profileApiMessage = result.body()
+                else -> activity.startLoginActivity()
             }
-
-            return false
+            super.onPostExecute(result)
         }
-
-        override fun onPostExecute(success: Boolean?) {
-            if (success!!) {
-                // Cold start
-                TurbolinksSession.getDefault(this@SplashActivity).webView.settings.userAgentString =
-                        "turbolinks-view\\inventory-android"
-                if (profileApiMessage!!.isSuccessful) {
-                    val location = "https://${SkyDerbyApiService.hostName}/profiles/${profileApiMessage!!.body()!!.id}?mobile=1"
-                    val turbolinksView: TurbolinksView? = this@SplashActivity.findViewById(R.id.turbolinks_view)
-                    TurbolinksSession.getDefault(this@SplashActivity)
-                            .activity(this@SplashActivity)
-                            .adapter(this@SplashActivity)
-                            .view(turbolinksView)
-                            .visit(location)
-                }
-                //startMainActivity(profileApiMessage?.body())
-            }
-            else startLoginActivity()
-            //finish()
-        }
-    }
-
-    companion object {
-
-        // Splash screen timer
-        private const val SPLASH_TIME_OUT = 3000
     }
 }
+
+

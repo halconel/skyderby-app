@@ -51,7 +51,8 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"
                 android:textColor="@android:color/white"
-                android:textColorHint="@android:color/darker_gray" />
+                android:textColorHint="@android:color/darker_gray"
+                android:autofillHints="" />
 
             <androidx.cardview.widget.CardView
                 android:id="@+id/email_sign_in_button"

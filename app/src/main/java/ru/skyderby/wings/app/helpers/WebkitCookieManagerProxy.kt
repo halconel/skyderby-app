@@ -15,7 +15,7 @@ class WebkitCookieManagerProxy @JvmOverloads constructor(
         cookiePolicy: CookiePolicy? = null
 ) : CookieManager(null, cookiePolicy), CookieJar {
 
-    val webkitCookieManager: android.webkit.CookieManager =
+    private val webkitCookieManager: android.webkit.CookieManager =
             android.webkit.CookieManager.getInstance()
 
     @Throws(IOException::class)
@@ -23,7 +23,7 @@ class WebkitCookieManagerProxy @JvmOverloads constructor(
         // make sure our args are valid
         if (uri == null || responseHeaders == null) return
         // save our url once
-        val url = uri!!.toString()
+        val url = uri.toString()
         // go over the headers
         responseHeaders.keys.forEach { headerKey ->
             // ignore headers which aren't cookie related
@@ -42,7 +42,7 @@ class WebkitCookieManagerProxy @JvmOverloads constructor(
         // make sure our args are valid
         if (uri == null || requestHeaders == null) throw IllegalArgumentException("Argument is null")
         // save our url once
-        val url = uri!!.toString()
+        val url = uri.toString()
         // prepare our response
         val res = java.util.HashMap<String, List<String>>()
         // get the cookie
@@ -73,11 +73,11 @@ class WebkitCookieManagerProxy @JvmOverloads constructor(
     override fun loadForRequest(url: HttpUrl): List<Cookie> {
         val cookieArrayList: MutableList<Cookie> = ArrayList()
         try {
-            val cookieList = get(url.uri(), HashMap<String, List<String>>())
+            val cookieList = get(url.uri(), HashMap())
             // Format here looks like: "Cookie":["cookie1=val1;cookie2=val2;"]
             cookieList.values.forEach { ls ->
                 ls.forEach { s ->
-                    val cookies = s.split(";".toRegex()).dropLastWhile({ it.isEmpty() }).toTypedArray()
+                    val cookies = s.split(";".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
                     for (cookie in cookies) {
                         val c = Cookie.parse(url, cookie)
                         cookieArrayList.add(c!!)

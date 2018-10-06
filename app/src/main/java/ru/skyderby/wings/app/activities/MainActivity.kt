@@ -2,44 +2,40 @@ package ru.skyderby.wings.app.activities
 
 import android.app.Activity
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
-import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-
+import androidx.appcompat.widget.ShareActionProvider
+import androidx.core.view.MenuItemCompat
 import co.zsmb.materialdrawerkt.builders.accountHeader
 import co.zsmb.materialdrawerkt.builders.drawer
 import co.zsmb.materialdrawerkt.draweritems.badgeable.primaryItem
-import co.zsmb.materialdrawerkt.draweritems.divider
 import co.zsmb.materialdrawerkt.draweritems.profile.profile
 import co.zsmb.materialdrawerkt.draweritems.profile.profileSetting
 import co.zsmb.materialdrawerkt.draweritems.sectionHeader
-import co.zsmb.materialdrawerkt.imageloader.drawerImageLoader
-
-import com.mikepenz.materialdrawer.Drawer
-import com.mikepenz.fontawesome_typeface_library.FontAwesome
-import com.mikepenz.google_material_typeface_library.GoogleMaterial
-import com.mikepenz.materialdrawer.util.DrawerUIUtils
-import com.mikepenz.materialdrawer.AccountHeader
-
 import com.basecamp.turbolinks.TurbolinksAdapter
 import com.basecamp.turbolinks.TurbolinksSession
 import com.basecamp.turbolinks.TurbolinksView
+import com.mikepenz.fontawesome_typeface_library.FontAwesome
+import com.mikepenz.google_material_typeface_library.GoogleMaterial
+import com.mikepenz.materialdrawer.AccountHeader
+import com.mikepenz.materialdrawer.Drawer
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem
-
-import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.activity_main.*
-
 import ru.skyderby.wings.app.R
 import ru.skyderby.wings.app.api.CredentialsMessage
 import ru.skyderby.wings.app.helpers.Preferences
+import ru.ztrap.iconics.kt.inflateWithIconics
 import ru.ztrap.iconics.kt.setIconicsFactory
 import kotlin.reflect.KClass
+
 
 class MainActivity : AppCompatActivity(), TurbolinksAdapter {
     private lateinit var result: Drawer
     private lateinit var headerResult: AccountHeader
+    private var mShareActionProvider: ShareActionProvider? = null
     // Change the baseURL to an address that your VM or device can hit.
     private val hostName = "skyderby.ru"
     private var baseURL = "https://$hostName/?mobile=1"
@@ -63,6 +59,12 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
         val coldStart = intent.getBooleanExtra(getString(R.string.COLD_START), false)
 
         turbolinksView = findViewById(R.id.turbolinks_view)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            turbolinksView!!.setOnScrollChangeListener { v, x, y, oldX, oldY ->
+                if(y > oldY) supportActionBar!!.hide()
+                if(y < oldY) supportActionBar!!.show()
+            }
+        }
         executeWebVisit(coldStart)
 
         if(location != baseURL){
@@ -70,9 +72,9 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
             supportActionBar?.setHomeButtonEnabled(false)
         }
 
+        supportActionBar?.title = ""
         addDrawer(savedInstanceState)
 
-        toolbar
     }
 
     override fun onRestart() {
@@ -101,9 +103,15 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
         super.onSaveInstanceState(outState)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
         menuInflater.inflate(R.menu.menu_main, menu)
-        return super.onCreateOptionsMenu(menu)
+        // Locate MenuItem with ShareActionProvider
+        menu.findItem(R.id.action_share).also { menuItem ->
+            // Fetch and store ShareActionProvider
+            mShareActionProvider = MenuItemCompat.getActionProvider(menuItem) as ShareActionProvider
+        }
+
+        return true
     }
 
     // -----------------------------------------------------------------------
@@ -156,11 +164,11 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
         val appLinkIntent = intent
         val appLinkAction = appLinkIntent.action
         val appLinkData = appLinkIntent.data
-        if (Intent.ACTION_VIEW == appLinkAction) {
-            location = appLinkData!!.toString()
+        location = if (Intent.ACTION_VIEW == appLinkAction) {
+            appLinkData!!.toString()
         }
         else {
-            location = intent.getStringExtra(getString(R.string.INTENT_URL)) ?: baseURL
+            intent.getStringExtra(getString(R.string.INTENT_URL)) ?: baseURL
         }
         // Execute the visit
         if (coldStart) {
@@ -191,7 +199,7 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
                     .adapter(this)
                     .restoreWithCachedSnapshot(false)
                     .view(turbolinksView)
-                    .visit(baseURL + "/error")
+                    .visit("$baseURL/error")
         }
         else if(code == 401) {
 
@@ -212,9 +220,11 @@ class MainActivity : AppCompatActivity(), TurbolinksAdapter {
                 savedInstance = savedInstanceState
                 translucentStatusBar = true
 
-                profile(userProfile!!.name, Preferences.username) {
-                    iconUrl  = "https://${hostName+userProfile!!.photo.original}"
-                    identifier = userProfile!!.id
+                profile(userProfile?.name ?: "Guest", Preferences.username) {
+                    if(userProfile != null) {
+                        iconUrl = "https://${hostName + (userProfile!!.photo.original)}"
+                        identifier = userProfile!!.id
+                    }
                 }
                 profileSetting("Add account", "Add new Skyderby account") {
                     iicon = GoogleMaterial.Icon.gmd_add

@@ -16,14 +16,13 @@
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
 
     <FrameLayout
-        android:id="@+id/frame_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-    <com.basecamp.turbolinks.TurbolinksView
-        android:id="@+id/turbolinks_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        <com.basecamp.turbolinks.TurbolinksView
+            android:id="@+id/turbolinks_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
 
     </FrameLayout>
 

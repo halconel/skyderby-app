@@ -6,15 +6,15 @@
         android:id="@+id/action_share"
         android:title="@string/action_share"
         app:showAsAction="ifRoom"
+        app:actionProviderClass="androidx.appcompat.widget.ShareActionProvider"
         app:ico_icon="gmd_share"
         app:ico_size="24dp"
         app:ico_color="@android:color/white" />
     <item
-        android:id="@+id/action_settings"
         android:title="@string/action_settings"
         app:showAsAction="never"
         app:ico_icon="gmd_setting"
         app:ico_size="24dp"
-        app:ico_color="@android:color/white" />
+        app:ico_color="@color/material_drawer_dark_primary_icon" />
 
 </menu>
