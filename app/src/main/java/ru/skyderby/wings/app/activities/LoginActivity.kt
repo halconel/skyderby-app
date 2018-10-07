@@ -285,7 +285,10 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, TurbolinksAd
             if (result?.isSuccessful == true) {
                 activity.profileApiMessage = result.body()
             } else {
-                activity.password.error = activity.getString(R.string.error_incorrect_password)
+                activity.password.error = if(result == null && errorMessage != null)
+                    errorMessage
+                else
+                    activity.getString(R.string.error_incorrect_password)
                 activity.password.requestFocus()
             }
             super.onPostExecute(result)

@@ -16,6 +16,7 @@ open class AttemptLogin(
         private val viewID: Int
 ) : AsyncTask<Boolean, Void, Response<CredentialsMessage>?>() {
 
+    var errorMessage:String? = null
     private var coldBoot: Boolean = false
 
     private val skyDerbyApiService by lazy {
@@ -38,7 +39,8 @@ open class AttemptLogin(
             coldBoot = params[0] == true
             return skyDerbyApiService.getProfile(token).execute()
         } catch (e: IOException) {
-            e.printStackTrace()
+            //e.printStackTrace()
+            errorMessage = e.localizedMessage
         }
 
         return null
