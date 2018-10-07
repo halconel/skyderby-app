@@ -11,6 +11,14 @@
         app:ico_size="24dp"
         app:ico_color="@android:color/white" />
     <item
+        android:id="@+id/action_favorite"
+        android:title="@string/action_favorite"
+        app:showAsAction="ifRoom"
+        app:ico_icon="gmd_favorite"
+        app:ico_size="24dp"
+        app:ico_color="@android:color/white" />
+    <item
+        android:id="@+id/action_settings"
         android:title="@string/action_settings"
         app:showAsAction="never"
         app:ico_icon="gmd_setting"

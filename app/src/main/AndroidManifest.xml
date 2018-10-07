@@ -43,7 +43,14 @@
         <activity
             android:name=".activities.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar">
+            android:theme="@style/MaterialDrawerTheme.Light.DarkToolbar"
+            android:parentActivityName="ru.skyderby.wings.app.activities.MainActivity">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="ru.skyderby.wings.app.activities.MainActivity" />
+
             <tools:validation testUrl="https://skyderby.ru/tracks?mobile=1" />
 
             <intent-filter>

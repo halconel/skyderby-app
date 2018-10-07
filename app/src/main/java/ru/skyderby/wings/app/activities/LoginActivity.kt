@@ -218,8 +218,9 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, TurbolinksAd
             TextUtils.isEmpty(passwordStr) || !isPasswordValid(passwordStr)
 
     private fun isEmailValid(email: String): Boolean {
-        //TODO: Replace this with your own logic
-        return email.contains("@")
+        val regex =
+                """^[-a-z0-9!#${'$'}%&'*+\/=?^_`{|}~]+(?:\.[-a-z0-9!#${'$'}%&'*+\/=?^_`{|}~]+)*@(?:[a-z0-9]([-a-z0-9]{0,61}[a-z0-9])?\.)*(?:aero|arpa|asia|biz|cat|com|coop|edu|gov|info|int|jobs|mil|mobi|museum|name|net|org|pro|tel|travel|[a-z][a-z])${'$'}""".toRegex()
+        return email.matches(regex)
     }
 
     private fun isPasswordValid(password: String): Boolean {
@@ -265,6 +266,16 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, TurbolinksAd
 
         //var profileApiMessage: Response<CredentialsMessage>? = null
 
+        override fun doInBackground(vararg params: Boolean?): Response<CredentialsMessage>? {
+            val activity = activityReference.get() as? LoginActivity ?: return null
+            // Save credentials to preference
+            Preferences.init(activity)
+            Preferences.username = activity.email.text.toString()
+            Preferences.password = activity.password.text.toString()
+            return super.doInBackground(*params)
+        }
+
+
         override fun onPostExecute(result: Response<CredentialsMessage>?) {
             val activity = activityReference.get() as? LoginActivity ?: return
             if(activity.isFinishing || activity.isDestroyed) return
@@ -273,10 +284,6 @@ class LoginActivity : AppCompatActivity(), LoaderCallbacks<Cursor>, TurbolinksAd
 
             if (result?.isSuccessful == true) {
                 activity.profileApiMessage = result.body()
-                // Save credentials to preference
-                Preferences.init(activity)
-                Preferences.username = activity.email.text.toString()
-                Preferences.password = activity.password.text.toString()
             } else {
                 activity.password.error = activity.getString(R.string.error_incorrect_password)
                 activity.password.requestFocus()
