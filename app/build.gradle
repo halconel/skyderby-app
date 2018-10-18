@@ -3,6 +3,7 @@ apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
 
 apply plugin: 'kotlin-android-extensions'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -22,7 +23,7 @@ android {
     }
     flavorDimensions "version"
     productFlavors {
-        demo  {
+        demo {
             dimension "version"
             applicationIdSuffix ".demo"
             versionNameSuffix "-demo"
@@ -77,4 +78,6 @@ dependencies {
     /** Android KTX ++ */
     implementation 'androidx.core:core-ktx:1.0.0'
     /* Android KTX -- */
+    implementation 'com.google.firebase:firebase-core:16.0.4'
+    implementation 'com.google.firebase:firebase-messaging:17.3.4'
 }

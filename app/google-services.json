@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "289732464215",
+    "firebase_url": "https://skyderby-app.firebaseio.com",
+    "project_id": "skyderby-app",
+    "storage_bucket": "skyderby-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:289732464215:android:80b78bcc0b4464f0",
+        "android_client_info": {
+          "package_name": "ru.skyderby.wings.app.demo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "289732464215-jr7lpc8e9kbkunagepqjah0dc1c48nkr.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ru.skyderby.wings.app.demo",
+            "certificate_hash": "dfc217f1fc742807b1bf6aa2927d31d8d2d0c5b0"
+          }
+        },
+        {
+          "client_id": "289732464215-40op418rgmm3p99l7bjh8ugi4lujv0kb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCr462q9gRLsfQPTOtS21T-h1Lor09WkFI"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "289732464215-40op418rgmm3p99l7bjh8ugi4lujv0kb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
