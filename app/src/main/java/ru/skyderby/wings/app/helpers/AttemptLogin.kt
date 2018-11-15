@@ -2,13 +2,16 @@ package ru.skyderby.wings.app.helpers
 
 import android.app.Activity
 import android.os.AsyncTask
+import android.os.Process.setThreadPriority
 import com.basecamp.turbolinks.TurbolinksAdapter
 import com.basecamp.turbolinks.TurbolinksSession
 import retrofit2.Response
 import ru.skyderby.wings.app.api.CredentialsMessage
-import ru.skyderby.wings.app.api.SkyDerbyApiService
+import ru.skyderby.wings.app.api.SkyderbyApiService
 import java.io.IOException
 import java.lang.ref.WeakReference
+import android.os.Process.THREAD_PRIORITY_BACKGROUND
+import android.os.Process.THREAD_PRIORITY_MORE_FAVORABLE
 
 open class AttemptLogin(
         val activityReference: WeakReference<Activity>,
@@ -20,10 +23,11 @@ open class AttemptLogin(
     private var coldBoot: Boolean = false
 
     private val skyDerbyApiService by lazy {
-        SkyDerbyApiService.create()
+        SkyderbyApiService.create()
     }
 
     override fun doInBackground(vararg params: Boolean?): Response<CredentialsMessage>? {
+        setThreadPriority(THREAD_PRIORITY_BACKGROUND + THREAD_PRIORITY_MORE_FAVORABLE)
         // Return immediately if there references to nothing
         if (activityReference.get() == null || adapterReference.get() == null) return null
         // Get authorization credentials
@@ -66,7 +70,7 @@ open class AttemptLogin(
                 "turbolinks-view\\inventory-android"
         // Loading the main page for snapshot caching if the login attempt was successful
         val profile = result.body() ?: return
-        val location = "https://${SkyDerbyApiService.hostName}/profiles/${profile.id}?mobile=1"
+        val location = "https://${SkyderbyApiService.hostName}/profiles/${profile.id}?mobile=1"
         TurbolinksSession.getDefault(activity)
                 .activity(activity)
                 .adapter(adapter)

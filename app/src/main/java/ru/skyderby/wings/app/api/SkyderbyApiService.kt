@@ -8,14 +8,28 @@ import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.http.GET
 import retrofit2.http.Header
 import okhttp3.OkHttpClient
+import retrofit2.http.Path
 import ru.skyderby.wings.app.helpers.WebkitCookieManagerProxy
 import java.net.CookiePolicy
 
 
-interface SkyDerbyApiService {
+interface SkyderbyApiService {
 
     @GET("v1/profiles/current.json")
-    fun getProfile(@Header("Authorization") authorization: String): Call<CredentialsMessage>
+    fun getProfile(
+            @Header("Authorization") authorization: String
+    ): Call<CredentialsMessage>
+
+    /**
+     * @GET declares an HTTP GET request
+     * @Path("user") annotation on the userId parameter marks it as a
+     * replacement for the {user} placeholder in the @GET path
+     */
+    @GET("v1/profiles/{user}")
+    fun getProfileByID(
+            @Header("Authorization") authorization: String,
+            @Path("user") userId: String
+    ): Call<CredentialsMessage>
 
     companion object {
 
@@ -24,7 +38,7 @@ interface SkyDerbyApiService {
             WebkitCookieManagerProxy(null, CookiePolicy.ACCEPT_ALL)
         }
 
-        fun create(): SkyDerbyApiService {
+        fun create(): SkyderbyApiService {
 
             val client = OkHttpClient.Builder().cookieJar(proxy).build()
 
@@ -35,7 +49,7 @@ interface SkyDerbyApiService {
                     .client(client)
                     .build()
 
-            return retrofit.create(SkyDerbyApiService::class.java)
+            return retrofit.create(SkyderbyApiService::class.java)
         }
     }
 }

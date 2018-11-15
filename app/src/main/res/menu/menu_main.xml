@@ -5,6 +5,7 @@
     <item
         android:id="@+id/action_share"
         android:title="@string/action_share"
+        android:icon="@android:drawable/ic_menu_share"
         app:showAsAction="ifRoom"
         app:actionProviderClass="androidx.appcompat.widget.ShareActionProvider"
         app:ico_icon="gmd_share"
@@ -13,6 +14,7 @@
     <item
         android:id="@+id/action_favorite"
         android:title="@string/action_favorite"
+        android:icon="@android:drawable/btn_star"
         app:showAsAction="ifRoom"
         app:ico_icon="gmd_favorite"
         app:ico_size="24dp"
@@ -20,6 +22,7 @@
     <item
         android:id="@+id/action_settings"
         android:title="@string/action_settings"
+        android:icon="@android:drawable/ic_menu_preferences"
         app:showAsAction="never"
         app:ico_icon="gmd_setting"
         app:ico_size="24dp"

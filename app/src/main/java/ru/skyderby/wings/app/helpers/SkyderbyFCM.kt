@@ -1,4 +1,4 @@
-package ru.skyderby.wings.app.models
+package ru.skyderby.wings.app.helpers
 
 import android.util.Log
 import com.google.firebase.messaging.FirebaseMessagingService

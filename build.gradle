@@ -7,7 +7,7 @@ buildscript {
         jcenter()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.2.0'
+        classpath 'com.android.tools.build:gradle:3.2.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.github.dcendents:android-maven-gradle-plugin:2.1'
         classpath 'com.google.gms:google-services:4.0.1'
@@ -27,4 +27,18 @@ allprojects {
 
 task clean(type: Delete) {
     delete rootProject.buildDir
+}
+
+ext {
+    room_version = '1.1.1'
+    arch_lifecycle_version = '1.1.1'
+    turbolinks_version = '1.0.8'
+    retrofit_version = '2.4.0'
+    materialdrawer_version = '2.0.0'
+    iconics_version = '1.0.2'
+    firebase_core_version = '16.0.5'
+    firebase_messaging_version = '17.3.4'
+    andriodKTX_version = '1.0.1'
+    picasso_version = '2.5.2'
+    spinkit_version = '1.1.0'
 }

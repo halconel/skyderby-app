@@ -10,7 +10,7 @@ import com.squareup.picasso.Picasso
 import retrofit2.Response
 import ru.skyderby.wings.app.R
 import ru.skyderby.wings.app.api.CredentialsMessage
-import ru.skyderby.wings.app.api.SkyDerbyApiService
+import ru.skyderby.wings.app.api.SkyderbyApiService
 import ru.skyderby.wings.app.helpers.AttemptLogin
 import ru.ztrap.iconics.kt.setIconicsFactory
 import java.lang.ref.WeakReference
@@ -26,7 +26,7 @@ class SplashActivity : AppCompatActivity(), TurbolinksAdapter {
         // Start cookie magic
         android.webkit.CookieManager.getInstance().setAcceptCookie(true)
         android.webkit.CookieManager.getInstance().removeAllCookies(null)
-        java.net.CookieHandler.setDefault(SkyDerbyApiService.proxy)
+        java.net.CookieHandler.setDefault(SkyderbyApiService.proxy)
         // Attempt login
         UserLoginTask(this, R.id.turbolinks_view).execute(true)
         // Initialize image loader for drawer
